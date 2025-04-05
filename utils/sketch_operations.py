@@ -1,6 +1,5 @@
 import os
-from dataclasses import replace
-
+from tqdm import tqdm
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -22,10 +21,14 @@ def savefig(input_path, output_path):
 
 	# 保存图片
 	plt.savefig(output_path)
+	# 释放图形节省内存空间
+	plt.close(fig)
 
 def get_sketches(input_dir, output_dir):
-	# 遍历输入文件夹下的所有文件夹和文件
-	for root, dirs, files in os.walk(input_dir):
+	# 获取该文件夹下所有文件数量
+	total_files = sum([len(files) for _, _, files in os.walk(input_dir)])
+	# 遍历输入文件夹下的所有文件夹和文件并用tqdm来美化处理界面
+	for root, dirs, files in tqdm(os.walk(input_dir), total=total_files, desc="Converting dataset to sketches"):
 		# 遍历该文件夹下的所有文件
 		for file in files:
 			# 将文件夹路径 + 文件名拼接为输入路径
